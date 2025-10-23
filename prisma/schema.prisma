@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlserver"
+   url      = env("DATABASE_URL")
+}
+
+model Department {
+  id String @id @map("DepartmentID")
+  departmentName String @unique @map("DepartmentName")
+  location String @map("DepartmentLocation")
+
+//ONE TO MANY RELATIONSHIP
+employee Employee[]
+  @@map("Departments") // Map this model to the Departments table in SQL Server
+
+}
+
+
+model Employee {
+  id String @id @default(uuid())
+  firstName String
+  lastName String
+  email String @unique
+  salary Decimal
+  departmentId String
+
+//relationship
+department   Department@relation(fields: [departmentId],references: [id])
+
+}
+
+
+
+
